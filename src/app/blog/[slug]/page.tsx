@@ -5,6 +5,7 @@
 // Importamos las funciones para obtener datos de posts
 import { getPostData, getAllPostSlugs, formatDate, type PostData } from '@/lib/posts'
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
 
 // Props que recibe este componente desde Next.js
 type PageProps = {
@@ -42,9 +43,9 @@ export default async function PostPage({ params }: PageProps) {
         <article className="max-w-3xl mx-auto">
             {/* Breadcrumb/navegación */}
             <nav className="mb-8">
-                <a href="/blog" className="text-blue-600 hover:text-blue-800 text-sm">
+                <Link href="/blog" className="text-blue-600 hover:text-blue-800 text-sm">
                     ← Volver al blog
-                </a>
+                </Link>
             </nav>
 
             {/* Header del post */}
