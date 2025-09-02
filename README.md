@@ -34,3 +34,23 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+## Flujo General
+Lectura de archivos: Se lee el directorio content/posts para obtener todos los archivos .md.
+
+- Procesamiento:
+ 
+- Se extrae el slug del nombre del archivo.
+
+- Se parsean los metadatos y el contenido con gray-matter.
+ 
+- El Markdown se convierte a HTML con remark.
+
+- Salida: Datos estructurados para:
+
+- Listar posts ordenados (getSortedPostsData).
+
+- Generar rutas estáticas (getAllPostSlugs).
+
+- Renderizar un post individual (getPostData).
