@@ -2,6 +2,7 @@ import { e as createComponent, f as createAstro, h as addAttribute, k as renderH
 import 'kleur/colors';
 import { b as bind_props } from '../chunks/_@astro-renderers_B7J8j5P0.mjs';
 export { r as renderers } from '../chunks/_@astro-renderers_B7J8j5P0.mjs';
+/* empty css                                 */
 
 const CONTENT_REGEX = /[&<]/g;
 
@@ -47,18 +48,29 @@ function fallback(value, fallback, lazy = false) {
 		: value;
 }
 
+function Hora($$payload, $$props) {
+	let hora = $$props['hora'];
+
+	$$payload.out.push(`<h2 class="svelte-s8xzf8">🕒 Hora desde Svelte (SSR)</h2> <p>La hora actual es: <strong>${escape_html(hora)}</strong></p>`);
+	bind_props($$props, { hora });
+}
+
 function HolaCarlos($$payload, $$props) {
-	let nombre = fallback($$props['nombre'], "Carlos");
+	let nombre = fallback($$props['nombre'], "");
 
 	$$payload.out.push(`<h1>Hola ${escape_html(nombre)}, ¡tu frontend está vivo! 🚀</h1>`);
 	bind_props($$props, { nombre });
 }
 
 const $$Astro = createAstro();
+const prerender = false;
 const $$Index = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro, $$props, $$slots);
   Astro2.self = $$Index;
-  return renderTemplate`<html lang="en"> <head><meta charset="utf-8"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="viewport" content="width=device-width"><meta name="generator"${addAttribute(Astro2.generator, "content")}><title>Astro</title>${renderHead()}</head> <body> <h1>Astro</h1> <div> ${renderComponent($$result, "HolaCarlos", HolaCarlos, { "nombre": "Carlos" })} </div> </body></html>`;
+  const horaServidor = (/* @__PURE__ */ new Date()).toLocaleString("es-CO", {
+    timeZone: "America/Bogota"
+  });
+  return renderTemplate`<html lang="en"> <head><meta charset="utf-8"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="viewport" content="width=device-width"><meta name="generator"${addAttribute(Astro2.generator, "content")}><title>Astro</title>${renderHead()}</head> <body> <h1>Astro</h1> <div> ${renderComponent($$result, "HolaCarlos", HolaCarlos, { "nombre": "Carloz" })} </div> <div> <h1>Bienvenido a mi página Astro + Svelte</h1> ${renderComponent($$result, "Hora", Hora, { "hora": horaServidor })} </div> </body></html>`;
 }, "D:/Users/Development/Documents/GitHub/blog/frontend/src/pages/index.astro", void 0);
 
 const $$file = "D:/Users/Development/Documents/GitHub/blog/frontend/src/pages/index.astro";
@@ -68,6 +80,7 @@ const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
 	__proto__: null,
 	default: $$Index,
 	file: $$file,
+	prerender,
 	url: $$url
 }, Symbol.toStringTag, { value: 'Module' }));
 

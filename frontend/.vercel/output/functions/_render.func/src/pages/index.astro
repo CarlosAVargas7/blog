@@ -1,19 +1,32 @@
 ---
-import HolaCarlos from '../components/HolaCarlos.svelte';
+export const prerender = false;
+
+import Hora from "../components/Hora.svelte";
+const horaServidor = new Date().toLocaleString("es-CO", {
+  timeZone: "America/Bogota",
+});
+
+import HolaCarlos from "../components/HolaCarlos.svelte";
 ---
 
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-		<div>
-			<HolaCarlos nombre="Carlos" />
-		</div>
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Astro</title>
+  </head>
+  <body>
+    <h1>Astro</h1>
+    <div>
+      <HolaCarlos nombre="Carloz" />
+    </div>
+	
+	<div>
+		<h1>Bienvenido a mi página Astro + Svelte</h1>
+    <Hora hora={horaServidor} />
+	</div>
+
+  </body>
 </html>
