@@ -1,0 +1,6 @@
+{
+    "blog": "Blog",
+    "welcomePage": "Welcome to my Astro + Svelte page",
+    "greetingCarlos": "Hello {name}, your frontend is alive! 🚀",
+    "currentTime": "The current time is: {time}"
+}
