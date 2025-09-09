@@ -2,25 +2,23 @@
 export const prerender = false;
 
 import "../styles/global.css";
+import { getCollection, type CollectionEntry } from "astro:content";
+import { formatDateDDMMYYYY } from "../utils/helper";
 
-import type { MarkdownInstance } from "astro";
+// Variables de entorno (lado servidor)
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || "";
+const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || "";
 
-interface Frontmatter {
-  title: string;
-  date: string;
-  tags?: string[];
-}
+// Carga posts de la colección 'blog' con tipos
+let posts: CollectionEntry<"blog">[] = await getCollection("blog");
 
-let posts: MarkdownInstance<Frontmatter>[] = await Astro.glob<Frontmatter>(
-  "../content/blog/*.md"
-);
-
-// Ordenar por fecha descendente
+// Ordena por fecha descendente
 posts = posts.sort(
-  (a, b) =>
-    new Date(b.frontmatter.date).getTime() -
-    new Date(a.frontmatter.date).getTime()
+  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
 );
+
+console.log("🔗 URL desde .env:", supabaseUrl);
+console.log("🔑 Key desde .env:", supabaseAnonKey);
 ---
 
 <!doctype html>
@@ -31,80 +29,91 @@ posts = posts.sort(
     <title>Blog</title>
   </head>
 
-  <body style="background-color: #000000f2;">
+  <body style="background-color: rgba(0,0,0,0.95);">
     <h2
       class="blog"
-      style="text-align: center; display: flex; justify-content: center; align-items: center; gap: 10px;"
+      style="text-align: center; display: flex; justify-content: center; align-items: center; padding-top: 10px; padding-bottom: 10px; font-size: 1.7rem;"
     >
       Blog
     </h2>
 
-    <!-- Texto "Última entrada" con estilo cohesivo -->
     <div class="content-block">
-      <h2 style="text-align: center; color: white; margin-top: 20px;">
-        Última entrada
-        <span style="display: block; font-size: 1.2rem; margin-top: 5px;"
-          >⬇</span
-        >
+      <h2
+        style="text-align: center; color: white; font-size: 1rem; text-align: left; font-weight:lighter;"
+      >
+        Última entrada ⇂
       </h2>
     </div>
 
-    <!-- Última entrada -->
     <nav
       class="last"
-      style="position: center; text-align: left; box-shadow: 10px 10px 10px 10px #000000;
-  max-width: 700px;
+      style="position: center; text-align: left; box-shadow: 10px 10px 20px 10px #000000; mask-border-outset: 1px; border-radius: 0px;
+  max-width: 850px;
   min-width: 300px;
-  margin: 30px auto;
+  margin: 0px auto;
   padding: 10px 10px;
   box-sizing: border-box;"
     >
       {
-        posts.slice(0, 1).map((Post) => (
-          <article style="font-family: 'SF Pro Text'; font-size: 14px;">
-            <h1 style="font-size: 1rem; text-align: center;">
-              {Post.frontmatter.title}
-            </h1>
-            <Post.Content />
+        posts.slice(0, 1).map((post) => (
+          <article style="font-family: 'SF Pro Text'; font-size: 20px;">
+            <h1 style="font-size: 20px;">{post.data.title}</h1>
+
+            {/* Render del contenido HTML precompilado, si está disponible */}
+            {post.rendered?.html && <div set:html={post.rendered.html} />}
+
             <div class="tags">
               <p>Tags:</p>
-              {Post.frontmatter.tags?.map((tag) => (
+              {post.data.tags?.map((tag: string) => (
                 <span class="tag">{tag}</span>
               ))}
+            </div>
+            <div class="date">
+              <p style="text-align: right; font-size: 1rem;">
+                {formatDateDDMMYYYY(post.data.date)}
+              </p>
             </div>
           </article>
         ))
       }
     </nav>
 
-    <!-- Botón "Otras entradas" con mismo ancho -->
-    <div class="content-block" style="text-align: center; margin: 20px auto;">
-      <h2 class="btn">Entradas recientes</h2>
+    <div class="content-block" style="text-align: center; margin: 10px auto;">
+      <h2
+        class="btn"
+        style="text-align: center; color: white; font-size: 1rem; text-align: left; font-weight:lighter;"
+      >
+        Otras entradas ⇂
+      </h2>
     </div>
 
-    <!--Otras entradas-->
-    <section id="otras-entradas" class="content-block entries-grid">
+    <section
+      id="otras-entradas"
+      class="content-block entries-grid"
+      style="margin: -5px auto;"
+    >
       {
-        posts.slice(1).map((Post) => (
-          <div class="entry-card">
-            <h3>{Post.frontmatter.title}</h3>
+        posts.slice(1).map((post) => (
+          <div class="entry-card" style="box-shadow: 10px 10px 20px #000000;">
+            <h3>{post.data.title}</h3>
             <div class="tags">
-              {Post.frontmatter.tags?.map((tag) => (
+              {post.data.tags?.map((tag: string) => (
                 <span class="tag">{tag}</span>
               ))}
+            </div>
+            <div class="date" style="text-align: end;">
+              <p style="text-align: right; margin: 10px 0px; font-size: 1rem;">
+                {formatDateDDMMYYYY(post.data.date)}
+              </p>
             </div>
           </div>
         ))
       }
     </section>
 
-    <!-- Botón "Otras entradas" con mismo ancho -->
-    <div class="content-block" style="text-align: center; margin: 20px auto;">
-      <a href="#otras-entradas" class="btn">Otras entradas</a>
-    </div>
+    <div class="content-block"></div>
 
-    <!-- Footer -->
-    <footer class="footer">
+    <footer class="footer" style="margin: 30px auto;">
       <p>© {new Date().getFullYear()} Blog — CarlosAVargas7</p>
       <a
         href="https://github.com/carlosavargas7"

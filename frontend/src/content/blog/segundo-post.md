@@ -1,7 +1,62 @@
 ---
-title: "Lanzamiento de la nueva versión de Astro"
-date: 2024-09-15
-tags: ["astro", "javascript", "frontend"]
+title: "Implementando Tipado Estático en Funciones JavaScript con TypeScript"
+date: 2023-10-01
+tags: ["#TypeScript", "#TipadoEstático", "#Funciones"]
 ---
 
-Astro lanza su nueva versión con mejoras en rendimiento y soporte para más integraciones.
+Al realizar la migración de funciones JavaScript a TypeScript, apareció:
+
+"Necesito garantizar que una función de suma solo acepte números como parámetros"
+
+La transición de JavaScript a TypeScript requiere añadir anotaciones de tipo para evitar errores en tiempo de ejecución.
+
+---
+
+#### Contexto
+
+- TypeScript ofrece tipado estático sobre JavaScript
+- Las funciones necesitan definición explícita de tipos de parámetros
+- El compilador de TypeScript verifica los tipos antes de la ejecución
+
+TypeScript extiende JavaScript añadiendo tipos estáticos, permitiendo detectar errores durante el desarrollo.
+
+---
+
+#### Síntoma
+
+- Función vulnerable a recibir parámetros no numéricos
+- Posibles resultados incorrectos con tipos diferentes a number
+- Falta de validación de tipos en tiempo de compilación
+
+---
+
+#### Causa
+
+JavaScript permite operaciones entre diferentes tipos de datos, lo que puede generar resultados inesperados cuando se suman valores no numéricos.
+
+---
+
+#### Configuración / Solución aplicada
+
+- Definir explicitamente el tipo de los parámetros como number
+- Especificar el tipo de retorno de la función como number
+- Mantener la lógica original de la función
+- Añadir assertions para verificar el comportamiento
+
+```typescript
+function convertirSumaSimple(a: number, b: number): number {
+    return a + b;
+}
+```
+
+---
+
+#### Buenas prácticas
+
+- Siempre definir tipos para parámetros de función
+- Especificar el tipo de retorno de las funciones
+
+Utilizar assertions para verificar el comportamiento esperado
+
+Configurar el compilador de TypeScript en modo estricto
+

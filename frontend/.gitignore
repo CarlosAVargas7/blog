@@ -24,3 +24,10 @@ pnpm-debug.log*
 .idea/
 
 .vercel/output
+
+.env
+.env.production
+.env.local
+.env.example
+.env.example.production
+.env.example.local

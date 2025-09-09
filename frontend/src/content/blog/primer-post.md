@@ -1,39 +1,73 @@
 ---
-title: "Solución encontrada ✅  
-"
+title: "Despliegue de Astro con Bun en Vercel: solución al error ERR_MODULE_NOT_FOUND"
 date: 2025-09-07
-tags: ["bun", "svelte", "astro", "vercel", "despliegue"]
+tags: ["#astro", "#bun", "#vercel", "#ssr", "#frontend"]
 ---
 ---
-Después de varias horas de pruebas, el problema se resolvió ajustando la configuración de despliegue en Vercel y corrigiendo el manejo del directorio de salida.  
+Al desplegar un proyecto Astro con Bun en Vercel (modo SSR), apareció:
 
-**Pasos que resolvieron el error:**
+```
+ERR_MODULE_NOT_FOUND: Cannot find module 'dist/server/entry.mjs'
+```
 
-1. **Configurar correctamente el proyecto en Vercel**  
-   - **Framework Preset:** Astro  
-   - **Root Directory:** `frontend`  
-   - **Build Command:**  
-     ```bash
-     bun install && bun run build
-     ```  
-   - **Install Command:**  
-     ```bash
-     bun install
-     ```  
-   - **Output Directory:** `.vercel/output`  
-     *(Importante: configurarlo explícitamente; si se deja vacío, Vercel usa `dist` por defecto, lo que en este caso provocaba el error)*  
-
-2. **Ignorar `.vercel/output` en Git**  
-   Añadir en `.gitignore`:  
-   ```
-   .vercel/output
-   ```  
-   Esto evita subir artefactos de builds locales y permite que Vercel genere su propia salida limpia en cada despliegue.
-
-Con esta configuración, el build en Vercel genera correctamente la estructura SSR y el archivo de entrada del servidor, eliminando el error `ERR_MODULE_NOT_FOUND` al buscar `dist/server/entry.mjs`.
+En local todo funcionaba. En Vercel fallaba por una configuración de salida inconsistente.
 
 ---
 
-**Cierro la issue** porque el despliegue ahora funciona correctamente con SSR y páginas estáticas según lo esperado.  
+#### contexto
+
+- Proyecto con Astro y SSR.
+- Gestor de paquetes: Bun.
+- Despliegue en Vercel.
+
+El build de producción de Astro para SSR genera estructura en `.vercel/output`. Si Vercel busca en `dist/`, no encuentra el `entry.mjs`.
 
 ---
+
+#### Síntoma
+
+- Build exitoso en local.
+- En Vercel, error al no hallar `dist/server/entry.mjs`.
+
+---
+
+#### Causa
+
+Vercel, si no se indica, asume `dist/` como carpeta de salida. Para SSR con Astro, la salida válida es `.vercel/output`. Esa desalineación provoca el error.
+
+---
+
+#### Configuración en Vercel
+
+- Framework Preset: `Astro`
+- Root Directory: `frontend`
+- Build Command:
+  ```bash
+  bun install && bun run build
+  ```
+- Install Command:
+  ```bash
+  bun install
+  ```
+- Output Directory: `.vercel/output`  
+  Importante: si se deja vacío, Vercel usará `dist/` por defecto.
+
+---
+
+#### Buenas prácticas
+
+- Ignorar `.vercel/output` en Git para no subir artefactos locales:
+  ```
+  .vercel/output
+  ```
+- Mantener los mismos comandos de instalación y build en local y CI.
+- Verificar que el proyecto genera `.vercel/output` correctamente antes del deploy.
+
+---
+
+#### Resultado
+
+- Vercel construye la estructura SSR completa.
+- `entry.mjs` se resuelve en la ruta esperada.
+- El error `ERR_MODULE_NOT_FOUND` desaparece.
+- SSR y páginas estáticas funcionan según lo previsto.

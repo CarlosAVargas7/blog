@@ -94,7 +94,7 @@ body {
     background: white;
     color: black;
     padding: 4px 10px;
-    font-size: 0.5rem;
+    font-size: 0.6rem;
     font-weight: 500;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     cursor: pointer;
@@ -146,29 +146,41 @@ body {
 }
 
 .content-block {
-    max-width: 700px;
+    max-width: 850px;
     min-width: 300px;
-    margin: 30px auto;
-    padding: 10px 10px;
+    margin: 0px auto;
+    padding: 0px 10px;
     box-sizing: border-box;
-  }
-  
-  .entries-grid {
+}
+
+.entries-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 15px;
-  }
-  
-  .entry-card {
+}
+
+.entry-card {
     background-color: #111;
     padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
     color: white;
     transition: transform 0.2s ease;
-  }
-  
-  .entry-card:hover {
+    font-size: 1rem;
+}
+
+.entry-card:hover {
     transform: translateY(-3px);
-  }
-  
+}
+
+.entry-card,
+.last article {
+  position: relative;
+  padding-bottom: 3rem; /* espacio para la fecha */
+}
+
+.date {
+  position: absolute;
+  bottom: 0px;
+  right: 8px;
+  font-size: 0.9rem;
+  color: #ffffff;
+}
