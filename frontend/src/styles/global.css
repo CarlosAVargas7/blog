@@ -17,9 +17,8 @@ body {
 body {
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
-    font-family: sans-serif;
-    background-color: #000;
-    /* Cambia según tu diseño */
+    font-family: 'SF Pro', sans-serif;
+    background-color: rgba(0, 0, 0, 0.95);
     color: #fff;
 }
 
@@ -63,7 +62,7 @@ textarea {
     box-sizing: inherit;
 }
 
-
+/* ===== Fuentes ===== */
 @font-face {
     font-family: 'SF Pro';
     src: url('/fonts/SF-Pro-Display-Medium.otf') format('opentype');
@@ -74,8 +73,25 @@ textarea {
     src: url('/fonts/SF-Pro-Text-Regular.otf') format('opentype');
 }
 
-body {
-    font-family: 'SF Pro';
+/* ===== Layout Principal ===== */
+.content-block {
+    max-width: 850px;
+    min-width: 300px;
+    margin: 0px auto;
+    padding: 0px 10px;
+    box-sizing: border-box;
+}
+
+/* ===== Títulos y Headers ===== */
+.blog {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    font-size: 1.7rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .blog:hover {
@@ -83,11 +99,80 @@ body {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 }
 
+.section-title {
+    text-align: center;
+    color: white;
+    font-size: 1rem;
+    text-align: left;
+    font-weight: lighter;
+}
+
+/* ===== Navegación y Entradas ===== */
+.last {
+    position: center;
+    text-align: left;
+    box-shadow: 10px 10px 20px 10px #000000;
+    mask-border-outset: 1px;
+    border-radius: 0px;
+    max-width: 850px;
+    min-width: 300px;
+    margin: 0px auto;
+    padding: 10px 10px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+
+.last article {
+    font-family: 'SF Pro Text';
+    font-size: 20px;
+    position: relative;
+    padding-bottom: 3rem;
+}
+
+.last article h1 {
+    font-size: 20px;
+}
+
+/* ===== Grid de Entradas ===== */
+.entries-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 2fr));
+    gap: 15px;
+    margin: -5px auto;
+    max-width: 870px;
+    min-width: 300px;
+}
+
+.entry-card {
+    background-color: #111;
+    padding: 15px;
+    color: white;
+    transition: transform 0.2s ease;
+    font-size: 1rem;
+    box-shadow: 10px 10px 20px #000000;
+    position: relative;
+    padding-bottom: 3rem;
+}
+
+.entry-card:hover {
+    transform: translateY(-3px);
+}
+
+.entry-card h3 {
+    margin-bottom: 10px;
+}
+
+/* ===== Tags ===== */
 .tags {
     margin-top: 10px;
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+}
+
+.tags p {
+    margin-right: 8px;
+    font-weight: 500;
 }
 
 .tag {
@@ -105,17 +190,36 @@ body {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 }
 
-.footer {
-    background-color: #0d0d0d;
-    /* negro suave */
-    color: #aaa;
-    /* gris claro */
-    text-align: center;
-    padding: 15px 10px;
-    font-size: 0.85rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+/* ===== Fechas ===== */
+.date {
+    position: absolute;
+    bottom: 0px;
+    right: 8px;
+    font-size: 0.9rem;
+    color: #ffffff;
 }
 
+.date p {
+    text-align: right;
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* Fecha específica para la entrada principal */
+.last .date p {
+    text-align: right;
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* Fecha específica para las otras entradas */
+.entry-card .date p {
+    text-align: right;
+    margin: 10px 0px;
+    font-size: 1rem;
+}
+
+/* ===== Footer ===== */
 .footer {
     background-color: #0d0d0d;
     color: #aaa;
@@ -127,6 +231,7 @@ body {
     justify-content: center;
     align-items: center;
     gap: 12px;
+    margin: 30px auto;
 }
 
 .footer p {
@@ -145,42 +250,41 @@ body {
     transform: scale(1.1);
 }
 
-.content-block {
-    max-width: 850px;
-    min-width: 300px;
-    margin: 0px auto;
-    padding: 0px 10px;
-    box-sizing: border-box;
+/* ===== Espaciado específico ===== */
+.section-spacing {
+    text-align: center;
+    margin: 10px auto;
 }
 
-.entries-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 15px;
+/* ===== Estilos interactivos para React ===== */
+.entry-card.interactive {
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
 }
 
-.entry-card {
-    background-color: #111;
-    padding: 15px;
-    color: white;
-    transition: transform 0.2s ease;
-    font-size: 1rem;
+.entry-card.interactive:hover {
+    border-color: #333;
+    box-shadow: 15px 15px 25px #000000;
 }
 
-.entry-card:hover {
-    transform: translateY(-3px);
+.post-preview {
+    font-size: 0.9rem;
+    color: #ccc;
+    margin: 10px 0;
+    line-height: 1.4;
 }
 
-.entry-card,
-.last article {
-  position: relative;
-  padding-bottom: 3rem; /* espacio para la fecha */
+.click-indicator {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    font-size: 0.75rem;
+    color: #666;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-.date {
-  position: absolute;
-  bottom: 0px;
-  right: 8px;
-  font-size: 0.9rem;
-  color: #ffffff;
+.entry-card.interactive:hover .click-indicator {
+    opacity: 1;
 }

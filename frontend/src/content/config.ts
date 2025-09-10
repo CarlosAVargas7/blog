@@ -4,8 +4,10 @@ const blog = defineCollection({
     schema: z.object({
         title: z.string(),
         date: z.coerce.date(),    // convierte strings/fechas a Date
-        tags: z.array(z.string()).optional()
+        tags: z.array(z.string()).optional(),
+        draft: z.boolean().optional()
     })
 });
 
 export const collections = { blog };
+

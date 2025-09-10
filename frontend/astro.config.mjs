@@ -1,9 +1,12 @@
 import { defineConfig } from 'astro/config';
 import vercel from '@astrojs/vercel';
-import svelte from '@astrojs/svelte';
+
+import react from '@astrojs/react';
 
 export default defineConfig({
-  integrations: [svelte()],
-  output: 'server', // SSR
-  adapter: vercel()
+  // Solo si necesitas SSR
+  output: 'server',
+
+  adapter: vercel(),
+  integrations: [react()]
 });

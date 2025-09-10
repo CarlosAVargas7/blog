@@ -3,11 +3,18 @@ export const prerender = false;
 
 import "../styles/global.css";
 import { getCollection, type CollectionEntry } from "astro:content";
-import { formatDateDDMMYYYY } from "../utils/helper";
+import { formatDateDDMMYYYY } from "../utils/date";
+import BlogManager from "../components/BlogManager";
 
-// Variables de entorno (lado servidor)
-const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || "";
-const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || "";
+// Tipos TypeScript
+type BlogPost = {
+  id: string | number;
+  title: string;
+  content?: string;
+  tags: string[];
+  date: string | Date;
+  slug?: string;
+};
 
 // Carga posts de la colección 'blog' con tipos
 let posts: CollectionEntry<"blog">[] = await getCollection("blog");
@@ -17,8 +24,15 @@ posts = posts.sort(
   (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
 );
 
-console.log("🔗 URL desde .env:", supabaseUrl);
-console.log("🔑 Key desde .env:", supabaseAnonKey);
+// Transforma los posts para el componente React con tipos explícitos
+const postsForReact: BlogPost[] = posts.map((post, index) => ({
+  id: post.slug || index.toString(),
+  title: post.data.title,
+  content: post.rendered?.html || post.body || "Sin contenido disponible",
+  tags: post.data.tags || [],
+  date: post.data.date,
+  slug: post.slug,
+}));
 ---
 
 <!doctype html>
@@ -29,110 +43,8 @@ console.log("🔑 Key desde .env:", supabaseAnonKey);
     <title>Blog</title>
   </head>
 
-  <body style="background-color: rgba(0,0,0,0.95);">
-    <h2
-      class="blog"
-      style="text-align: center; display: flex; justify-content: center; align-items: center; padding-top: 10px; padding-bottom: 10px; font-size: 1.7rem;"
-    >
-      Blog
-    </h2>
-
-    <div class="content-block">
-      <h2
-        style="text-align: center; color: white; font-size: 1rem; text-align: left; font-weight:lighter;"
-      >
-        Última entrada ⇂
-      </h2>
-    </div>
-
-    <nav
-      class="last"
-      style="position: center; text-align: left; box-shadow: 10px 10px 20px 10px #000000; mask-border-outset: 1px; border-radius: 0px;
-  max-width: 850px;
-  min-width: 300px;
-  margin: 0px auto;
-  padding: 10px 10px;
-  box-sizing: border-box;"
-    >
-      {
-        posts.slice(0, 1).map((post) => (
-          <article style="font-family: 'SF Pro Text'; font-size: 20px;">
-            <h1 style="font-size: 20px;">{post.data.title}</h1>
-
-            {/* Render del contenido HTML precompilado, si está disponible */}
-            {post.rendered?.html && <div set:html={post.rendered.html} />}
-
-            <div class="tags">
-              <p>Tags:</p>
-              {post.data.tags?.map((tag: string) => (
-                <span class="tag">{tag}</span>
-              ))}
-            </div>
-            <div class="date">
-              <p style="text-align: right; font-size: 1rem;">
-                {formatDateDDMMYYYY(post.data.date)}
-              </p>
-            </div>
-          </article>
-        ))
-      }
-    </nav>
-
-    <div class="content-block" style="text-align: center; margin: 10px auto;">
-      <h2
-        class="btn"
-        style="text-align: center; color: white; font-size: 1rem; text-align: left; font-weight:lighter;"
-      >
-        Otras entradas ⇂
-      </h2>
-    </div>
-
-    <section
-      id="otras-entradas"
-      class="content-block entries-grid"
-      style="margin: -5px auto;"
-    >
-      {
-        posts.slice(1).map((post) => (
-          <div class="entry-card" style="box-shadow: 10px 10px 20px #000000;">
-            <h3>{post.data.title}</h3>
-            <div class="tags">
-              {post.data.tags?.map((tag: string) => (
-                <span class="tag">{tag}</span>
-              ))}
-            </div>
-            <div class="date" style="text-align: end;">
-              <p style="text-align: right; margin: 10px 0px; font-size: 1rem;">
-                {formatDateDDMMYYYY(post.data.date)}
-              </p>
-            </div>
-          </div>
-        ))
-      }
-    </section>
-
-    <div class="content-block"></div>
-
-    <footer class="footer" style="margin: 30px auto;">
-      <p>© {new Date().getFullYear()} Blog — CarlosAVargas7</p>
-      <a
-        href="https://github.com/carlosavargas7"
-        target="_blank"
-        class="github-link"
-        aria-label="GitHub"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-        >
-          <path
-            d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.53-1.34-1.3-1.7-1.3-1.7-1.06-.73.08-.72.08-.72 1.17.08 1.78 1.2 1.78 1.2 1.04 1.78 2.73 1.27 3.4.97.11-.75.41-1.27.75-1.56-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.8 0c2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.69 5.41-5.25 5.69.42.36.8 1.07.8 2.16 0 1.56-.01 2.82-.01 3.2 0 .31.21.68.8.56A10.99 10.99 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5z"
-          ></path>
-        </svg>
-      </a>
-    </footer>
+  <body>
+    <!-- Componente React TypeScript que maneja todo el blog -->
+    <BlogManager initialPosts={postsForReact} client:load />
   </body>
 </html>
